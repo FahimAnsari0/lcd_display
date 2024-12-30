@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Text to Wemos D1 Mini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        textarea {
+            width: 300px;
+            height: 50px;
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Enter Text for LCD Display</h1>
+    <textarea id="textInput" placeholder="Enter text here..."></textarea>
+    <button id="sendBtn">Send to LCD</button>
+
+    <script>
+        // Static IP address for Wemos D1 Mini
+        const wemosIP = 'http://192.168.135.238/updateText';  // The IP of the Wemos D1 Mini
+
+        async function sendTextToWemos() {
+            const text = document.getElementById('textInput').value;
+            if (text) {
+                try {
+                    // Send GET request to the Wemos with the entered message
+                    const response = await fetch(wemosIP + '?message=' + encodeURIComponent(text));
+                    const data = await response.json();
+                    alert("Text sent: " + data.message);  // Show confirmation alert
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error sending text to Wemos D1 Mini');
+                }
+            } else {
+                alert('Please enter some text');
+            }
+        }
+
+        document.getElementById('sendBtn').addEventListener('click', sendTextToWemos);
+    </script>
+
+</body>
+</html>
